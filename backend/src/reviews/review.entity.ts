@@ -10,7 +10,7 @@ export class Review {
   @Column({ type: 'int' })
   score: number; 
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true})
   comment: string;
 
   @CreateDateColumn()
