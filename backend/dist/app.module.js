@@ -38,6 +38,8 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             movies_module_1.MoviesModule,
         ],
+        controllers: [],
+        providers: [],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

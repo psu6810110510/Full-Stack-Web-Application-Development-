@@ -1,4 +1,4 @@
-import { Review } from '../reviews/review.entity';
+import { Review } from '../../reviews/review.entity';
 export declare class User {
     user_id: number;
     username: string;

@@ -26,5 +26,7 @@ import { MoviesModule } from './movies/movies.module';
     AuthModule,
     MoviesModule,
   ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
