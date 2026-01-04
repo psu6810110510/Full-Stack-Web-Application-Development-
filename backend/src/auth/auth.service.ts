@@ -27,6 +27,7 @@ export class AuthService {
     const payload = { username: user.username, sub: user.id, role: user.role };
     return {
       access_token: this.jwtService.sign(payload), // สร้าง Token ยึกยือๆ
+      role: user.role, // ส่ง role กลับไปด้วย
     };
   }
 }
