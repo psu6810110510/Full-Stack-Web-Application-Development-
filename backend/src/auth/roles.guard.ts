@@ -21,11 +21,6 @@ export class RolesGuard implements CanActivate {
 
     // 3. ดึงข้อมูล User จาก Request (ต้องผ่าน JwtAuthGuard มาก่อนนะ)
     const { user } = context.switchToHttp().getRequest();
-    console.log('--- DEBUG ROLES ---');
-    console.log('User Role (ในบัตร):', user?.role);
-    console.log('Required (ที่ต้องการ):', requiredRoles);
-    console.log('Is Match?:', requiredRoles.some((role) => user?.role === role));
-    console.log('-------------------');
     // 4. เช็คว่า User มี Role ตรงกับที่ต้องการไหม
     return requiredRoles.some((role) => user.role === role);
   }
