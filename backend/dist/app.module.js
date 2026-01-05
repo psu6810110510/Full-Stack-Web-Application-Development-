@@ -17,6 +17,8 @@ const config_1 = require("@nestjs/config");
 const auth_module_1 = require("./auth/auth.module");
 const users_module_1 = require("./users/users.module");
 const movies_module_1 = require("./movies/movies.module");
+const genres_module_1 = require("./genres/genres.module");
+const reviews_module_1 = require("./reviews/reviews.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -37,6 +39,8 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
             movies_module_1.MoviesModule,
+            genres_module_1.GenresModule,
+            reviews_module_1.ReviewsModule,
         ],
         controllers: [],
         providers: [],

@@ -1,5 +1,5 @@
 // backend/src/movies/movies.controller.ts
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 // import { CreateMovieDto } from './dto/create-movie.dto'; // ถ้ายังไม่มี DTO ให้ใช้ any ไปก่อนหรือ comment ไว้
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -13,8 +13,16 @@ export class MoviesController {
 
   // 🟢 ดูหนัง (ใครก็ได้ดูได้)
   @Get()
-  findAll() {
+  findAll(@Query('genreId') genreId?: string) {
+    if (genreId) {
+      return this.moviesService.findByGenre(parseInt(genreId));
+    }
     return this.moviesService.findAll();
+  }
+
+  @Get('featured')
+  getFeaturedMovie() {
+    return this.moviesService.getFeaturedMovie();
   }
 
   @Get(':id')

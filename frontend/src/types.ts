@@ -1,5 +1,6 @@
 export interface LoginResponse {
   access_token: string;
+  role: 'ADMIN' | 'USER';
 }
 
 export interface User {
@@ -14,9 +15,13 @@ export interface Genre {
 }
 
 export interface Movie {
-  id: number;          
-  title: string;       
+  movie_id: number;
+  title: string;
   posterUrl: string;
+  description: string;
+  director: string;
+  releaseDate: string;
+  duration: number;
   averageRating: number;
   genres: Genre[];
 }

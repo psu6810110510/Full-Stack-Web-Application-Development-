@@ -1,77 +1,49 @@
-import { useState, useEffect } from 'react';
-import Login from './Login'; 
-import type { Movie } from './types'; 
+import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import MovieDetail from './pages/MovieDetail';
+import LoginPage from './pages/LoginPage';
 import './App.css';
 
+interface Genre {
+  id: number;
+  name: string;
+}
+
 function App() {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
-  const [movies, setMovies] = useState<Movie[]>([]);
-
-  const handleLoginSuccess = (newToken: string) => {
-    localStorage.setItem('token', newToken); 
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-    setMovies([]);
-  };
+  const [genres, setGenres] = useState<Genre[]>([]);
 
   useEffect(() => {
-    if (!token) return;
-
-    const fetchMovies = async () => {
+    const fetchGenres = async () => {
       try {
-        const response = await fetch('http://localhost:3000/movies', {
-          headers: { 
-            'Authorization': `Bearer ${token}`, // ยื่นบัตรผ่านให้ Backend ดู
-            'Content-Type': 'application/json'
-          },
-        });
-        
-        if (response.ok) {
-           const data = await response.json();
-           setMovies(data);
+        const res = await fetch('http://localhost:3000/genres');
+        if (res.ok) {
+          const data = await res.json();
+          setGenres(data);
         }
       } catch (error) {
-        console.error('Error fetching movies:', error);
+        console.error('Error fetching genres:', error);
       }
     };
-
-    fetchMovies();
-  }, [token]);
-
-  
-  if (!token) {
-    return <Login onLoginSuccess={handleLoginSuccess} />;
-  }
+    fetchGenres();
+  }, []);
 
   return (
-    <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Movie Reviews</h1>
-        <button onClick={handleLogout} style={{ padding: '5px 10px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px' }}>
-          Logout
-        </button>
-      </div>
-
-      <div className="grid">
-        {movies.map((movie) => (
-          <div key={movie.id} className="card">
-            <img src={movie.posterUrl} alt={movie.title} style={{ width: '150px', borderRadius: '8px' }} />
-            <h3>{movie.title}</h3>
-            <p>Rating: {movie.averageRating ? Number(movie.averageRating).toFixed(1) : '0.0'}</p>
-            <div>
-              {movie.genres?.map((g) => (
-                <span key={g.id} style={{ margin: '0 5px', fontSize: '0.8em', color: '#666' }}>
-                  {g.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    <AuthProvider>
+      <Router>
+        <div className="app">
+          <Navbar genres={genres} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/movie/:id" element={<MovieDetail />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/genre/:id" element={<Home />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

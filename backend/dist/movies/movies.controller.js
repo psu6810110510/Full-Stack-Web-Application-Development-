@@ -23,8 +23,14 @@ let MoviesController = class MoviesController {
     constructor(moviesService) {
         this.moviesService = moviesService;
     }
-    findAll() {
+    findAll(genreId) {
+        if (genreId) {
+            return this.moviesService.findByGenre(parseInt(genreId));
+        }
         return this.moviesService.findAll();
+    }
+    getFeaturedMovie() {
+        return this.moviesService.getFeaturedMovie();
     }
     findOne(id) {
         return this.moviesService.findOne(+id);
@@ -42,10 +48,17 @@ let MoviesController = class MoviesController {
 exports.MoviesController = MoviesController;
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('genreId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], MoviesController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('featured'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], MoviesController.prototype, "findAll", null);
+], MoviesController.prototype, "getFeaturedMovie", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
