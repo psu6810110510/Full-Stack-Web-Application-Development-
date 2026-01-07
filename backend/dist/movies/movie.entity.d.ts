@@ -8,6 +8,7 @@ export declare class Movie {
     director: string;
     releaseDate: Date;
     duration: number;
+    rating: number;
     created_at: Date;
     updated_at: Date;
     genres: Genre[];

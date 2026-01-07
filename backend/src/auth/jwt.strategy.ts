@@ -15,6 +15,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     // แกะข้อมูลออกมาจากบัตร เพื่อส่งต่อให้ Controller
-    return { userId: payload.sub, username: payload.username, role: payload.role };
+    return { id: payload.sub, username: payload.username, role: payload.role };
   }
 }

@@ -1,8 +1,13 @@
 import { Review } from '../../reviews/review.entity';
+export declare enum UserRole {
+    ADMIN = "ADMIN",
+    USER = "USER"
+}
 export declare class User {
-    user_id: number;
+    id: number;
     username: string;
-    email: string;
     password: string;
+    email: string;
+    role: UserRole;
     reviews: Review[];
 }

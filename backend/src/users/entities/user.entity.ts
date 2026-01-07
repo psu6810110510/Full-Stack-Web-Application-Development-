@@ -1,21 +1,32 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany} from 'typeorm';
 import { Review } from '../../reviews/review.entity';
+
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  user_id: number; // ตรงกับในรูป PK
+  id: number;
 
   @Column({ unique: true })
   username: string;
 
   @Column()
-  email: string;
-
-  @Column()
   password: string;
 
-  // Relation: 1 User เขียนได้หลาย Review
+  @Column()
+  email: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole;
+
   @OneToMany(() => Review, (review) => review.user)
   reviews: Review[];
 }

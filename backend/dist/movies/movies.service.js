@@ -22,20 +22,38 @@ let MoviesService = class MoviesService {
         this.moviesRepository = moviesRepository;
     }
     findAll() {
-        return this.moviesRepository.find();
+        return this.moviesRepository.find({
+            relations: ['genres'],
+            order: {
+                movie_id: 'ASC',
+            },
+        });
     }
-    findOne(id) {
-        return this.moviesRepository.findOneBy({ movie_id: id });
+    async findOne(id) {
+        const movie = await this.moviesRepository.findOne({
+            where: { movie_id: id },
+            relations: ['reviews', 'reviews.user', 'genres'],
+        });
+        if (!movie) {
+            throw new common_1.NotFoundException(`Movie with ID ${id} not found`);
+        }
+        return movie;
     }
     create(data) {
         return this.moviesRepository.save(data);
     }
     async update(id, data) {
-        await this.moviesRepository.update(id, data);
-        return this.findOne(id);
+        const movie = await this.findOne(id);
+        if (!data || Object.keys(data).length === 0) {
+            return movie;
+        }
+        const updatedMovie = this.moviesRepository.merge(movie, data);
+        return this.moviesRepository.save(updatedMovie);
     }
-    remove(id) {
-        return this.moviesRepository.delete(id);
+    async remove(id) {
+        const movie = await this.findOne(id);
+        await this.moviesRepository.delete({ movie_id: id });
+        return { message: `Movie with ID ${id} deleted successfully` };
     }
 };
 exports.MoviesService = MoviesService;

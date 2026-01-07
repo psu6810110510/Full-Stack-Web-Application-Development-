@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm'; // อย่าลืม import เพิ่มตรงนี้
 import { Genre } from '../genres/genre.entity';
 import { Review } from '../reviews/review.entity';
-
 @Entity()
 export class Movie {
   @PrimaryGeneratedColumn()
@@ -26,6 +25,9 @@ export class Movie {
 
   @Column({ nullable: true })
   duration!: number; // ความยาวหนัง (นาที)
+  
+  @Column({ type: 'decimal', precision: 3, scale: 1, default: 0 })
+  rating: number;  // คะแนนเฉลี่ยจากรีวิว
 
   // Auto-generated timestamp: มีประโยชน์มากตอนทำฟีเจอร์ "หนังมาใหม่"
   @CreateDateColumn()

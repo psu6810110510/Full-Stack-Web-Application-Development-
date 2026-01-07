@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const user_entity_1 = require("./users/user.entity");
+const user_entity_1 = require("./users/entities/user.entity");
 const movie_entity_1 = require("./movies/movie.entity");
 const genre_entity_1 = require("./genres/genre.entity");
 const review_entity_1 = require("./reviews/review.entity");
@@ -17,6 +17,7 @@ const config_1 = require("@nestjs/config");
 const auth_module_1 = require("./auth/auth.module");
 const users_module_1 = require("./users/users.module");
 const movies_module_1 = require("./movies/movies.module");
+const reviews_module_1 = require("./reviews/reviews.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -37,6 +38,7 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
             movies_module_1.MoviesModule,
+            reviews_module_1.ReviewsModule,
         ],
         controllers: [],
         providers: [],

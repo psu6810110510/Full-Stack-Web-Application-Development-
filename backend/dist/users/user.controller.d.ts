@@ -2,5 +2,5 @@ import { UsersService } from './users.service';
 export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);
-    register(body: any): Promise<import("./user.entity").User>;
+    register(body: any): Promise<import("./entities/user.entity").User>;
 }

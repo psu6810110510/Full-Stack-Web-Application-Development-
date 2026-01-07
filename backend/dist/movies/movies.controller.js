@@ -26,17 +26,17 @@ let MoviesController = class MoviesController {
     findAll() {
         return this.moviesService.findAll();
     }
-    findOne(id) {
-        return this.moviesService.findOne(+id);
+    findOne(movie_id) {
+        return this.moviesService.findOne(+movie_id);
     }
     create(createMovieDto) {
         return this.moviesService.create(createMovieDto);
     }
-    update(id, updateMovieDto) {
-        return this.moviesService.update(+id, updateMovieDto);
+    update(movie_id, updateMovieDto) {
+        return this.moviesService.update(+movie_id, updateMovieDto);
     }
-    remove(id) {
-        return this.moviesService.remove(+id);
+    remove(movie_id) {
+        return this.moviesService.remove(+movie_id);
     }
 };
 exports.MoviesController = MoviesController;
@@ -47,8 +47,8 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], MoviesController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)(':movie_id'),
+    __param(0, (0, common_1.Param)('movie_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
@@ -65,8 +65,8 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_role_enum_1.UserRole.ADMIN),
-    (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Patch)(':movie_id'),
+    __param(0, (0, common_1.Param)('movie_id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
@@ -75,8 +75,8 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(user_role_enum_1.UserRole.ADMIN),
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Delete)(':movie_id'),
+    __param(0, (0, common_1.Param)('movie_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)

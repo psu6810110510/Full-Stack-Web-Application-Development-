@@ -7,5 +7,7 @@ export declare class MoviesService {
     findOne(id: number): Promise<Movie>;
     create(data: any): Promise<any>;
     update(id: number, data: any): Promise<Movie>;
-    remove(id: number): Promise<import("typeorm").DeleteResult>;
+    remove(id: number): Promise<{
+        message: string;
+    }>;
 }

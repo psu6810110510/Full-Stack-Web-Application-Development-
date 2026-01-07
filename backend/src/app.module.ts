@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';  
-import { User } from './users/user.entity'; 
+import { User } from './users/entities/user.entity'; 
 import { Movie } from './movies/movie.entity';
 import { Genre } from './genres/genre.entity'; 
 import { Review } from './reviews/review.entity';
@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { MoviesModule } from './movies/movies.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MoviesModule } from './movies/movies.module';
     UsersModule,
     AuthModule,
     MoviesModule,
+    ReviewsModule,
   ],
   controllers: [],
   providers: [],

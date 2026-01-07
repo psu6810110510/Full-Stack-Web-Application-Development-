@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
-import { User } from '../users/user.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, JoinColumn  } from 'typeorm';
+import { User } from '../users/entities/user.entity';
 import { Movie } from '../movies/movie.entity';
 
 @Entity()
@@ -8,7 +8,7 @@ export class Review {
   id: number;
 
   @Column({ type: 'int' })
-  score: number; 
+  rating: number;
 
   @Column({ type: 'text', nullable: true})
   comment: string;
@@ -16,9 +16,11 @@ export class Review {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(() => User, (user) => user.reviews)
+  @ManyToOne(() => User, (user) => user.reviews, { eager: false })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Movie, (movie) => movie.reviews)
+  @ManyToOne(() => Movie, (movie) => movie.reviews, { eager: false,nullable: false, onDelete: 'CASCADE' }) // 👈 เพิ่ม onDelete: 'CASCADE'
+  @JoinColumn({ name: 'movie_id' }) // 👈 เพิ่มบรรทัดนี้
   movie: Movie;
 }

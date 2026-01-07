@@ -45,6 +45,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Movie.prototype, "duration", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 3, scale: 1, default: 0 }),
+    __metadata("design:type", Number)
+], Movie.prototype, "rating", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], Movie.prototype, "created_at", void 0);

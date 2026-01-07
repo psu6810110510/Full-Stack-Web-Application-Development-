@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Review = void 0;
 const typeorm_1 = require("typeorm");
-const user_entity_1 = require("../users/user.entity");
+const user_entity_1 = require("../users/entities/user.entity");
 const movie_entity_1 = require("../movies/movie.entity");
 let Review = class Review {
 };
@@ -23,7 +23,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ type: 'int' }),
     __metadata("design:type", Number)
-], Review.prototype, "score", void 0);
+], Review.prototype, "rating", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
@@ -33,11 +33,13 @@ __decorate([
     __metadata("design:type", Date)
 ], Review.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (user) => user.reviews),
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (user) => user.reviews, { eager: false }),
+    (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
     __metadata("design:type", user_entity_1.User)
 ], Review.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => movie_entity_1.Movie, (movie) => movie.reviews),
+    (0, typeorm_1.ManyToOne)(() => movie_entity_1.Movie, (movie) => movie.reviews, { eager: false, nullable: false, onDelete: 'CASCADE' }),
+    (0, typeorm_1.JoinColumn)({ name: 'movie_id' }),
     __metadata("design:type", movie_entity_1.Movie)
 ], Review.prototype, "movie", void 0);
 exports.Review = Review = __decorate([

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Movie } from './movie.entity';
@@ -11,23 +11,50 @@ export class MoviesService {
   ) {}
 
   findAll() {
-    return this.moviesRepository.find();
+    return this.moviesRepository.find({
+      relations: ['genres'],
+      order: {
+        movie_id: 'ASC', 
+      },
+    }); // 👈 ปิดวงเล็บจริงๆ ตรงนี้ทีเดียวจบ
   }
 
-  findOne(id: number) {
-    return this.moviesRepository.findOneBy({ movie_id: id });
+  async findOne(id: number) {
+    const movie = await this.moviesRepository.findOne({
+      where: { movie_id: id }, // ใช้ movie_id ตาม Entity ของคุณ
+      relations: ['reviews', 'reviews.user', 'genres'],
+    });
+
+    if (!movie) {
+      throw new NotFoundException(`Movie with ID ${id} not found`);
+    }
+    return movie;
   }
 
   create(data: any) {
     return this.moviesRepository.save(data);
   }
 
+  // 👇 จุดสำคัญคือฟังก์ชันนี้ครับ ต้องใช้ .merge() และ .save() เท่านั้น
   async update(id: number, data: any) {
-    await this.moviesRepository.update(id, data);
-    return this.findOne(id);
+    // 1. ดึงข้อมูลเก่าออกมาก่อน
+    const movie = await this.findOne(id);
+
+    // 2. ถ้าไม่มีข้อมูลส่งมา ก็คืนค่าเดิมกลับไปเลย (ป้องกัน Error: UpdateValuesMissingError)
+    if (!data || Object.keys(data).length === 0) {
+      return movie;
+    }
+
+    // 3. เอาข้อมูลใหม่ (data) ไปทับข้อมูลเก่า (movie)
+    const updatedMovie = this.moviesRepository.merge(movie, data);
+    
+    // 4. บันทึก (ใช้ .save แทน .update เพื่อแก้ปัญหาถาวร)
+    return this.moviesRepository.save(updatedMovie);
   }
 
-  remove(id: number) {
-    return this.moviesRepository.delete(id);
+  async remove(id: number) {
+    const movie = await this.findOne(id);
+    await this.moviesRepository.delete({ movie_id: id });
+    return { message: `Movie with ID ${id} deleted successfully` };
   }
 }
