@@ -39,6 +39,23 @@ let MoviesService = class MoviesService {
         }
         return movie;
     }
+    async getFeaturedMovie() {
+        const movies = await this.moviesRepository.find({
+            relations: ['genres'],
+            order: { rating: 'DESC' },
+            take: 1,
+        });
+        return movies[0];
+    }
+    async findByGenre(genreId) {
+        return this.moviesRepository.find({
+            where: {
+                genres: { id: genreId }
+            },
+            relations: ['genres'],
+            order: { rating: 'DESC' }
+        });
+    }
     create(data) {
         return this.moviesRepository.save(data);
     }

@@ -1,4 +1,4 @@
-import { Controller,Get , Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller,Get , Post, Body, UseGuards, Request ,Param} from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // 👈 เช็ค path ให้ถูก
@@ -7,8 +7,9 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // 👈 เช็ค path
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  @UseGuards(JwtAuthGuard) // 🔒 ต้องล็อกอินก่อนถึงจะรีวิวได้
+// 🔒 ต้องล็อกอินก่อนถึงจะรีวิวได้
   create(@Body() createReviewDto: CreateReviewDto, @Request() req) {
     // req.user คือข้อมูล User ที่แกะออกมาจาก Token (คนรีวิวคือคนที่ล็อกอินอยู่)
     return this.reviewsService.create(createReviewDto, req.user);     
@@ -18,4 +19,9 @@ export class ReviewsController {
   findAll() {
     return this.reviewsService.findAll();
   }
+  @Get('movie/:movieId')
+  async getMovieReviews(@Param('movieId') movieId: string) {
+    return this.reviewsService.findByMovie(parseInt(movieId));
+  }
+
 }

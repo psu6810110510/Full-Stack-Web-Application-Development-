@@ -30,27 +30,43 @@ export class MoviesService {
     }
     return movie;
   }
+  async getFeaturedMovie() {
+    // ใช้ .find() แทน แล้วสั่ง take: 1 (ขอแค่ 1 เรื่อง)
+    const movies = await this.moviesRepository.find({
+      relations: ['genres'],
+      order: { rating: 'DESC' },
+      take: 1, 
+    });
+    
+    // ส่งคืนตัวแรกที่เจอ (หรือ null ถ้าไม่มีหนังเลย)
+    return movies[0]; 
+  }
+  async findByGenre(genreId: number) {
+    return this.moviesRepository.find({
+      where: { 
+        genres: { id: genreId } 
+      } as any, // ใช้ casting เล็กน้อยเพื่อให้ TypeORM เข้าใจ relation query
+      relations: ['genres'],
+      order: { rating: 'DESC' }
+    });
+  }
 
   create(data: any) {
     return this.moviesRepository.save(data);
   }
 
-  // 👇 จุดสำคัญคือฟังก์ชันนี้ครับ ต้องใช้ .merge() และ .save() เท่านั้น
   async update(id: number, data: any) {
-    // 1. ดึงข้อมูลเก่าออกมาก่อน
-    const movie = await this.findOne(id);
+  const movie = await this.findOne(id);
 
-    // 2. ถ้าไม่มีข้อมูลส่งมา ก็คืนค่าเดิมกลับไปเลย (ป้องกัน Error: UpdateValuesMissingError)
     if (!data || Object.keys(data).length === 0) {
       return movie;
     }
 
-    // 3. เอาข้อมูลใหม่ (data) ไปทับข้อมูลเก่า (movie)
     const updatedMovie = this.moviesRepository.merge(movie, data);
-    
-    // 4. บันทึก (ใช้ .save แทน .update เพื่อแก้ปัญหาถาวร)
     return this.moviesRepository.save(updatedMovie);
   }
+
+  // 🔴 ลบหนัง (Admin)
 
   async remove(id: number) {
     const movie = await this.findOne(id);

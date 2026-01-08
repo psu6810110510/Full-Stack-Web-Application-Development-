@@ -28,7 +28,7 @@ export interface Movie {
 // 5. Review Interface
 export interface Review {
   id: number;
-  score: number;
+  rating: number;
   comment: string;
   user: User;
 }

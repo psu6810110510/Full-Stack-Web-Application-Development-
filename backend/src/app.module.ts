@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { MoviesModule } from './movies/movies.module';
+import { GenresModule } from './genres/genres.module';
 import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
@@ -20,12 +21,13 @@ import { ReviewsModule } from './reviews/reviews.module';
       username: 'admin',     
       password: 'password123', 
       database: 'movie_review_db',
-      entities: [User, Movie, Genre, Review],       
+      entities: [User, Movie, Review, Genre],       
       synchronize: true,      
     }),
     UsersModule,
     AuthModule,
     MoviesModule,
+    GenresModule,
     ReviewsModule,
   ],
   controllers: [],

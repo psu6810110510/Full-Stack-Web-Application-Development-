@@ -27,11 +27,14 @@ let ReviewsController = class ReviewsController {
     findAll() {
         return this.reviewsService.findAll();
     }
+    async getMovieReviews(movieId) {
+        return this.reviewsService.findByMovie(parseInt(movieId));
+    }
 };
 exports.ReviewsController = ReviewsController;
 __decorate([
-    (0, common_1.Post)(),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
@@ -44,6 +47,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], ReviewsController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('movie/:movieId'),
+    __param(0, (0, common_1.Param)('movieId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ReviewsController.prototype, "getMovieReviews", null);
 exports.ReviewsController = ReviewsController = __decorate([
     (0, common_1.Controller)('reviews'),
     __metadata("design:paramtypes", [reviews_service_1.ReviewsService])

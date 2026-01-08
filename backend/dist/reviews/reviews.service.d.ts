@@ -9,5 +9,6 @@ export declare class ReviewsService {
     constructor(reviewsRepository: Repository<Review>, moviesRepository: Repository<Movie>);
     create(createReviewDto: CreateReviewDto, user: User): Promise<Review>;
     findAll(): Promise<Review[]>;
+    findByMovie(movieId: number): Promise<Review[]>;
     private updateMovieRating;
 }

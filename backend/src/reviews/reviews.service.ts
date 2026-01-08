@@ -41,11 +41,11 @@ export class ReviewsService {
     const review = this.reviewsRepository.create({
       comment,
       rating,
-      user: { id: user.id } as User,      
-      movie: { movie_id: movieId } as Movie,
+      user,     
+      movie,
     });
 
-    await this.reviewsRepository.insert(review);
+    await this.reviewsRepository.save(review);
 
     await this.updateMovieRating(movieId);
 
@@ -60,6 +60,14 @@ export class ReviewsService {
       order: {
         createdAt: 'DESC', // เรียงจากใหม่ไปเก่า
       },
+    });
+  }
+  // 🆕 3. เพิ่มฟังก์ชันนี้มาจาก Incoming (เอาไว้ดูรีวิวของหนังเรื่องนั้นๆ)
+  async findByMovie(movieId: number): Promise<Review[]> {
+    return this.reviewsRepository.find({
+      where: { movie: { movie_id: movieId } },
+      relations: ['user'],
+      order: { createdAt: 'DESC' },
     });
   }
   // 🔥 [จุดที่ 2] เพิ่มฟังก์ชันนี้ไว้ล่างสุดของไฟล์ (ก่อนปีกกาปิดสุดท้าย)

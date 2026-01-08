@@ -5,4 +5,5 @@ export declare class ReviewsController {
     constructor(reviewsService: ReviewsService);
     create(createReviewDto: CreateReviewDto, req: any): Promise<import("./review.entity").Review>;
     findAll(): Promise<import("./review.entity").Review[]>;
+    getMovieReviews(movieId: string): Promise<import("./review.entity").Review[]>;
 }

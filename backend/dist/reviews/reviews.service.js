@@ -41,10 +41,10 @@ let ReviewsService = class ReviewsService {
         const review = this.reviewsRepository.create({
             comment,
             rating,
-            user: { id: user.id },
-            movie: { movie_id: movieId },
+            user,
+            movie,
         });
-        await this.reviewsRepository.insert(review);
+        await this.reviewsRepository.save(review);
         await this.updateMovieRating(movieId);
         return review;
     }
@@ -57,6 +57,13 @@ let ReviewsService = class ReviewsService {
             order: {
                 createdAt: 'DESC',
             },
+        });
+    }
+    async findByMovie(movieId) {
+        return this.reviewsRepository.find({
+            where: { movie: { movie_id: movieId } },
+            relations: ['user'],
+            order: { createdAt: 'DESC' },
         });
     }
     async updateMovieRating(movieId) {

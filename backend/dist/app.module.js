@@ -17,6 +17,7 @@ const config_1 = require("@nestjs/config");
 const auth_module_1 = require("./auth/auth.module");
 const users_module_1 = require("./users/users.module");
 const movies_module_1 = require("./movies/movies.module");
+const genres_module_1 = require("./genres/genres.module");
 const reviews_module_1 = require("./reviews/reviews.module");
 let AppModule = class AppModule {
 };
@@ -32,12 +33,13 @@ exports.AppModule = AppModule = __decorate([
                 username: 'admin',
                 password: 'password123',
                 database: 'movie_review_db',
-                entities: [user_entity_1.User, movie_entity_1.Movie, genre_entity_1.Genre, review_entity_1.Review],
+                entities: [user_entity_1.User, movie_entity_1.Movie, review_entity_1.Review, genre_entity_1.Genre],
                 synchronize: true,
             }),
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
             movies_module_1.MoviesModule,
+            genres_module_1.GenresModule,
             reviews_module_1.ReviewsModule,
         ],
         controllers: [],

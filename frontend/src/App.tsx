@@ -1,59 +1,49 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import MovieDetail from './pages/MovieDetail';
+import LoginPage from './pages/LoginPage';
 import './App.css';
 
-// --- ย้ายส่วน Interface มาไว้ตรงนี้ชั่วคราว ---
-export interface Genre {
+interface Genre {
   id: number;
   name: string;
 }
 
-export interface Movie {
-  id: number;
-  title: string;
-  posterUrl: string;
-  averageRating: number;
-  genres: Genre[];
-}
-// ------------------------------------------
-
 function App() {
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [genres, setGenres] = useState<Genre[]>([]);
 
   useEffect(() => {
-    const fetchMovies = async () => {
+    const fetchGenres = async () => {
       try {
-        const response = await fetch('http://localhost:3000/movies');
-        const data = await response.json();
-        setMovies(data);
+        const res = await fetch('http://localhost:3000/genres');
+        if (res.ok) {
+          const data = await res.json();
+          setGenres(data);
+        }
       } catch (error) {
-        console.error('Error fetching movies:', error);
+        console.error('Error fetching genres:', error);
       }
     };
-
-    fetchMovies();
+    fetchGenres();
   }, []);
 
   return (
-    <div className="container">
-      <h1>Movie Reviews</h1>
-      <div className="grid">
-        {movies.map((movie) => (
-          <div key={movie.id} className="card">
-            {/* ใส่ style inline เพื่อป้องกันรูปใหญ่เกินถ้ายังไม่ได้แก้ css */}
-            <img src={movie.posterUrl} alt={movie.title} style={{ width: '150px', borderRadius: '8px' }} />
-            <h3>{movie.title}</h3>
-            <p>Rating: {movie.averageRating?.toFixed(1) || '0.0'}</p>
-            <div>
-              {movie.genres?.map((g) => (
-                <span key={g.id} style={{ margin: '0 5px', fontSize: '0.8em', color: '#666' }}>
-                  {g.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    <AuthProvider>
+      <Router>
+        <div className="app">
+          <Navbar genres={genres} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/movie/:id" element={<MovieDetail />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/genre/:id" element={<Home />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

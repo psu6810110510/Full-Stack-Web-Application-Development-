@@ -1,5 +1,5 @@
 // backend/src/movies/movies.controller.ts
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -12,11 +12,18 @@ export class MoviesController {
 
   // 🟢 ดูหนังทั้งหมด
   @Get()
-  findAll() {
+  findAll(@Query('genreId') genreId?: string) {
+    if (genreId) {
+      return this.moviesService.findByGenre(parseInt(genreId));
+    }
     return this.moviesService.findAll();
   }
 
-  // 🟢 ดูรายละเอียดหนังรายเรื่อง (แก้จาก :id เป็น :movie_id)
+  @Get('featured')
+  getFeaturedMovie() {
+    return this.moviesService.getFeaturedMovie();
+  }
+
   @Get(':movie_id')
   findOne(@Param('movie_id') movie_id: string) {
     // ส่ง movie_id ไปให้ service ดึงข้อมูล
