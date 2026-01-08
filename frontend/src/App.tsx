@@ -6,6 +6,9 @@ import Home from './pages/Home';
 import MovieDetail from './pages/MovieDetail';
 import LoginPage from './pages/LoginPage';
 import './App.css';
+import AddMoviePage from './pages/AddMoviePage';
+import EditMoviePage from './pages/EditMoviePage';
+
 
 interface Genre {
   id: number;
@@ -40,6 +43,8 @@ function App() {
             <Route path="/movie/:id" element={<MovieDetail />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/genre/:id" element={<Home />} />
+            <Route path="/edit-movie/:id" element={<EditMoviePage />} />
+            <Route path="/add-movie" element={<AddMoviePage />} />
           </Routes>
         </div>
       </Router>

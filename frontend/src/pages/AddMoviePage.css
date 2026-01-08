@@ -1,0 +1,123 @@
+/* src/pages/AddMoviePage.css */
+
+.add-movie-page {
+  background-color: #141414; /* พื้นหลังสีดำเข้ม */
+  min-height: 100vh;
+  color: #fff;
+  padding-top: 80px; /* เผื่อพื้นที่ให้ Navbar ด้านบน */
+  padding-bottom: 50px;
+}
+
+.add-movie-container {
+  max-width: 700px;
+  margin: 0 auto; /* จัดกึ่งกลางหน้าจอ */
+  padding: 40px;
+  background-color: rgba(0, 0, 0, 0.75); /* พื้นหลังโปร่งแสงนิดๆ */
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.add-movie-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* การจัดวาง Form Group */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #cfcfcf; /* สีเทาอ่อน อ่านสบายตา */
+  font-size: 0.9rem;
+}
+
+/* สไตล์ Input และ Textarea */
+.form-group input[type="text"],
+.form-group input[type="url"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group textarea {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: #333;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  background-color: #454545;
+  border-bottom: 2px solid #e50914; /* เส้นใต้สีแดงตอนพิมพ์ */
+}
+
+/* จัดแถวแนวนอนสำหรับ ผู้กำกับ, วันฉาย, เวลา */
+.form-group-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+/* Checkbox หมวดหมู่ */
+.genre-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* จัด Grid อัตโนมัติ */
+  gap: 10px;
+  background: #222;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+.checkbox-label input {
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  accent-color: #e50914; /* เปลี่ยนสีติ๊กถูกเป็นสีแดง */
+}
+
+/* ปุ่ม Submit */
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: #b20710; /* สีแดงเข้มขึ้นเมื่อเอาเมาส์ชี้ */
+}
+
+/* Responsive: ถ้าจอเล็ก ให้เรียงแถวแนวตั้ง */
+@media (max-width: 600px) {
+  .form-group-row {
+    grid-template-columns: 1fr; /* เรียงลงมาแทน */
+  }
+  
+  .add-movie-container {
+    padding: 20px;
+    margin: 10px;
+  }
+}

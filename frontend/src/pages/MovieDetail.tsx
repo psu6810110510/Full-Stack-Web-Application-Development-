@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './MovieDetail.css';
 
@@ -26,7 +26,9 @@ interface Movie {
 
 export default function MovieDetail() {
   const { id } = useParams<{ id: string }>();
-  const { isAuthenticated, token } = useAuth();
+  const { isAuthenticated, token , role} = useAuth();
+  const navigate = useNavigate();
+
   const [movie, setMovie] = useState<Movie | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [rating, setRating] = useState(5);
@@ -51,6 +53,32 @@ export default function MovieDetail() {
       setLoading(false);
     }
   };
+  
+  const handleDelete = async () => {
+    if (!window.confirm('คุณแน่ใจหรือไม่ที่จะลบหนังเรื่องนี้? การกระทำนี้ไม่สามารถย้อนกลับได้')) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:3000/movies/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`, // ต้องมี Token ของ Admin
+        },
+      });
+
+      if (res.ok) {
+        alert('ลบหนังเรียบร้อยแล้ว');
+        navigate('/'); // ลบเสร็จให้เด้งกลับหน้าแรก
+      } else {
+        alert('เกิดข้อผิดพลาดในการลบหนัง');
+      }
+    } catch (error) {
+      console.error('Error deleting movie:', error);
+      alert('เกิดข้อผิดพลาด');
+    }
+  };
+
 
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,34 +124,96 @@ export default function MovieDetail() {
   }
 
   return (
-    <div className="movie-detail">
-      <div
-        className="movie-backdrop"
+  <div className="movie-detail">
+    <div
+      className="movie-backdrop"
+      style={{
+        backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.5), #141414), url(${movie.posterUrl})`,
+      }}
+    >
+      {/* 🟢 1. เพิ่มปุ่มย้อนกลับ (มุมซ้ายบน) */}
+      <button 
+        className="back-btn" 
+        onClick={() => navigate('/')}
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.5), #141414), url(${movie.posterUrl})`,
+          position: 'absolute',
+          top: '100px',
+          left: '20px',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          color: 'white',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          padding: '8px 15px',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          zIndex: 20,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '5px'
         }}
       >
-        <div className="movie-info">
-          <img src={movie.posterUrl} alt={movie.title} className="movie-poster-large" />
-          <div className="movie-text">
-            <h1>{movie.title}</h1>
-            <div className="movie-meta">
-              <span>⭐ {(Number(movie.rating) || 0).toFixed(1)}</span>
-              <span>{movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : ''}</span>
-              <span>{movie.duration} นาที</span>
-              <span>ผู้กำกับ: {movie.director}</span>
-            </div>
-            <div className="movie-genres">
-              {movie.genres.map((g) => (
-                <span key={g.id} className="genre-tag">
-                  {g.name}
-                </span>
-              ))}
-            </div>
-            <p className="movie-description">{movie.description}</p>
+        ⬅ ย้อนกลับ
+      </button>
+
+      <div className="movie-info">
+        <img src={movie.posterUrl} alt={movie.title} className="movie-poster-large" />
+        <div className="movie-text">
+          <h1>{movie.title}</h1>
+          {/* ... (Meta data เหมือนเดิม) ... */}
+          
+          <div className="movie-genres">
+             {/* ... (Genres เหมือนเดิม) ... */}
           </div>
+          
+          <p className="movie-description">{movie.description}</p>
+
+          <div className="action-buttons" style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+            {/* 🟢 2. เอาปุ่มรีวิวกลับมา (ถ้าต้องการ) */}
+            <button 
+              className="review-btn"
+              onClick={() => {
+                document.querySelector('.reviews-section')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              style={{
+                backgroundColor: 'white',
+                color: 'black',
+                border: 'none',
+                padding: '10px 24px',
+                borderRadius: '4px',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              ▶ รีวิว
+            </button>
+
+            {/* ปุ่ม Admin (แสดงต่อท้ายปุ่มรีวิว) */}
+            {role === 'ADMIN' && (
+              <>
+                <button
+                  onClick={() => navigate(`/edit-movie/${id}`)}
+                  style={{ backgroundColor: '#ffa500', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                  ✏️ แก้ไข
+                </button>
+                <button
+                  onClick={handleDelete}
+                  style={{ backgroundColor: '#dc3545', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                  🗑️ ลบหนัง
+                </button>
+              </>
+            )}
+          </div>
+
         </div>
       </div>
+    </div>
+
+
 
       <div className="reviews-section">
         <h2>รีวิวจากผู้ชม ({reviews.length})</h2>

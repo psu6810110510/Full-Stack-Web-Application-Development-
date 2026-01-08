@@ -19,6 +19,7 @@ const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const roles_guard_1 = require("../auth/roles.guard");
 const roles_decorator_1 = require("../auth/roles.decorator");
 const user_role_enum_1 = require("../users/user-role.enum");
+const create_movie_dto_1 = require("./dto/create-movie.dto");
 let MoviesController = class MoviesController {
     constructor(moviesService) {
         this.moviesService = moviesService;
@@ -72,7 +73,7 @@ __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [create_movie_dto_1.CreateMovieDto]),
     __metadata("design:returntype", void 0)
 ], MoviesController.prototype, "create", null);
 __decorate([

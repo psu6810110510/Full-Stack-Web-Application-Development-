@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Movie } from './movie.entity';
+import { CreateMovieDto } from './dto/create-movie.dto';
 
 @Injectable()
 export class MoviesService {
@@ -50,19 +51,32 @@ export class MoviesService {
       order: { rating: 'DESC' }
     });
   }
+  create(data: CreateMovieDto) {
+    // แยก genreIds ออกมา (เพราะ TypeORM ไม่รู้จัก field นี้ตรงๆ)
+    const { genreIds, ...movieData } = data;
 
-  create(data: any) {
-    return this.moviesRepository.save(data);
+    // แปลง Array ตัวเลข [1, 2] ให้เป็น Array Object [{id:1}, {id:2}]
+    const genres = genreIds ? genreIds.map((id) => ({ id })) : [];
+
+    // สร้าง Entity หนังใหม่ พร้อมแนบความสัมพันธ์ genres
+    const newMovie = this.moviesRepository.create({
+      ...movieData,
+      genres: genres, 
+    });
+
+    // บันทึกลงฐานข้อมูล
+    return this.moviesRepository.save(newMovie);
   }
 
   async update(id: number, data: any) {
-  const movie = await this.findOne(id);
+    const movie = await this.findOne(id);
 
     if (!data || Object.keys(data).length === 0) {
       return movie;
     }
 
     const updatedMovie = this.moviesRepository.merge(movie, data);
+  
     return this.moviesRepository.save(updatedMovie);
   }
 

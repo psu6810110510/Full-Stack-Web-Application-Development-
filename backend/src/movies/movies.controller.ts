@@ -5,6 +5,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { UserRole } from '../users/user-role.enum'; // 👈 ตรวจสอบว่า path นี้มีไฟล์อยู่จริง
+import { CreateMovieDto } from './dto/create-movie.dto';
 
 @Controller('movies')
 export class MoviesController {
@@ -34,7 +35,7 @@ export class MoviesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @Post()
-  create(@Body() createMovieDto: any) { 
+  create(@Body() createMovieDto: CreateMovieDto) { // 👈 เปลี่ยน any เป็น Type ที่ถูกต้อง
     return this.moviesService.create(createMovieDto);
   }
 
