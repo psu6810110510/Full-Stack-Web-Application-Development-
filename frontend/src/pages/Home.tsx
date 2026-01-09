@@ -1,29 +1,16 @@
 import { useEffect, useState } from 'react';
 import HeroSection from '../components/HeroSection';
 import MovieRow from '../components/MovieRow';
+import type { Movie, Genre } from '../interfaces';
 import './Home.css';
 
-interface Movie {
-  movie_id: number;
-  title: string;
-  posterUrl: string;
-  description: string;
-  director: string;
-  releaseDate: string;
-  duration: number;
-  averageRating: number;
-  genres: Array<{ id: number; name: string }>;
-}
-
-interface Genre {
-  id: number;
-  name: string;
+interface GenreWithMovies extends Genre {
   movies: Movie[];
 }
 
 export default function Home() {
   const [featuredMovie, setFeaturedMovie] = useState<Movie | null>(null);
-  const [genres, setGenres] = useState<Genre[]>([]);
+  const [genres, setGenres] = useState<GenreWithMovies[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -1,12 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import type { Movie } from '../interfaces';
 import './MovieRow.css';
-
-interface Movie {
-  movie_id: number;
-  title: string;
-  posterUrl: string;
-  averageRating: number;
-}
 
 interface MovieRowProps {
   title: string;
@@ -29,7 +23,7 @@ export default function MovieRow({ title, movies }: MovieRowProps) {
             <img src={movie.posterUrl} alt={movie.title} />
             <div className="poster-overlay">
               <h3>{movie.title}</h3>
-              <p>⭐ {movie.averageRating > 0 ? movie.averageRating.toFixed(1) : 'N/A'}</p>
+              <p>⭐ {(movie.rating || movie.averageRating || 0) > 0 ? (movie.rating || movie.averageRating || 0).toFixed(1) : 'N/A'}</p>
             </div>
           </div>
         ))}

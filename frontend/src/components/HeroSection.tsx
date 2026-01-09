@@ -1,17 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import type { Movie } from '../interfaces';
 import './HeroSection.css';
-
-interface Movie {
-  movie_id: number;
-  title: string;
-  description: string;
-  posterUrl: string;
-  director: string;
-  releaseDate: string;
-  duration: number;
-  rating: string;
-  genres: Array<{ id: number; name: string }>;
-}
 
 interface HeroSectionProps {
   movie: Movie | null;

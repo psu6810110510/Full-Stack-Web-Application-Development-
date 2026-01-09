@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15
+    container_name: movie-review-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: movie_review_db
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - movie-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: movie-review-backend
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: admin
+      DB_PASSWORD: password123
+      DB_DATABASE: movie_review_db
+      JWT_SECRET: your-super-secret-jwt-key-change-this-in-production
+    ports:
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - movie-network
+    restart: always
+    volumes:
+      - ./backend/src:/app/src
+    command: npm run start:dev
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: movie-review-frontend
+    ports:
+      - '5173:80'
+    depends_on:
+      - backend
+    networks:
+      - movie-network
+    restart: always
+
+networks:
+  movie-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
