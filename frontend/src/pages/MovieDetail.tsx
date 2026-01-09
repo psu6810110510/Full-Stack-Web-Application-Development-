@@ -1,12 +1,27 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import type { Movie, Review } from '../interfaces';
 import './MovieDetail.css';
 
-// Extend Review interface to include createdAt
-interface ReviewWithDate extends Review {
+interface Review {
+  id: number;
+  rating: number;
+  comment: string;
   createdAt: string;
+  user: { username: string };
+}
+
+interface Movie {
+  movie_id: number;
+  title: string;
+  description: string;
+  posterUrl: string;
+  director: string;
+  releaseDate: string;
+  duration: number;
+  rating: number;
+  genres: Array<{ id: number; name: string }>;
+  reviews: Review[];
 }
 
 export default function MovieDetail() {
@@ -15,7 +30,7 @@ export default function MovieDetail() {
   const navigate = useNavigate();
 
   const [movie, setMovie] = useState<Movie | null>(null);
-  const [reviews, setReviews] = useState<ReviewWithDate[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(true);

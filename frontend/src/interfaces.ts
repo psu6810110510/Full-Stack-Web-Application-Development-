@@ -7,7 +7,7 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  role: UserRole;
+  role: UserRole; // ใช้ได้เหมือนกัน
 }
 
 // 3. Genre Interface
@@ -16,17 +16,12 @@ export interface Genre {
   name: string;
 }
 
-// 4. Movie Interface (รวม properties ทั้งหมดที่ใช้ในโปรเจค)
+// 4. Movie Interface
 export interface Movie {
-  movie_id: number;        // ID จริงที่มาจาก backend
+  id: number;
   title: string;
-  description: string;
-  posterUrl: string;
-  director: string;
-  releaseDate: string;
-  duration: number;
-  rating: number;          // คะแนนเฉลี่ย (rating จาก entity)
-  averageRating?: number;  // สำหรับ backward compatibility
+  posterUrl?: string;    // เครื่องหมาย ? แปลว่า มีหรือไม่มีก็ได้
+  averageRating: number;
   genres: Genre[];
 }
 

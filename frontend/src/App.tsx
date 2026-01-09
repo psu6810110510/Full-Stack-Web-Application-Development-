@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import MovieDetail from './pages/MovieDetail';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import './App.css';
 import AddMoviePage from './pages/AddMoviePage';
 import EditMoviePage from './pages/EditMoviePage';
@@ -42,6 +43,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/movie/:id" element={<MovieDetail />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/genre/:id" element={<Home />} />
             <Route path="/edit-movie/:id" element={<EditMoviePage />} />
             <Route path="/add-movie" element={<AddMoviePage />} />

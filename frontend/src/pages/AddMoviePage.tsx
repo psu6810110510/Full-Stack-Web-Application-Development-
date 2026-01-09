@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import type { Genre } from '../interfaces';
 import './AddMoviePage.css';
+
+interface Genre {
+  id: number;
+  name: string;
+}
 
 export default function AddMoviePage() {
   const navigate = useNavigate();

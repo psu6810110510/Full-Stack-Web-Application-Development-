@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import type { Genre } from '../interfaces';
 import './AddMoviePage.css'; // ใช้ CSS เดิมของหน้าเพิ่มหนัง
+
+interface Genre { id: number; name: string; }
 
 export default function EditMoviePage() {
   const { id } = useParams();
