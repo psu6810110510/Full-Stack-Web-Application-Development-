@@ -15,9 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
+const users_service_1 = require("../users/users.service");
 let AuthController = class AuthController {
-    constructor(authService) {
+    constructor(authService, usersService) {
         this.authService = authService;
+        this.usersService = usersService;
     }
     async login(body) {
         const user = await this.authService.validateUser(body.username, body.password);
@@ -25,6 +27,9 @@ let AuthController = class AuthController {
             throw new common_1.UnauthorizedException('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
         }
         return this.authService.login(user);
+    }
+    async register(body) {
+        return this.usersService.register(body);
     }
 };
 exports.AuthController = AuthController;
@@ -35,8 +40,16 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('register'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "register", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
-    __metadata("design:paramtypes", [auth_service_1.AuthService])
+    __metadata("design:paramtypes", [auth_service_1.AuthService,
+        users_service_1.UsersService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map
