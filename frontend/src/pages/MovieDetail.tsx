@@ -158,11 +158,27 @@ export default function MovieDetail() {
         <img src={movie.posterUrl} alt={movie.title} className="movie-poster-large" />
         <div className="movie-text">
           <h1>{movie.title}</h1>
-          {/* ... (Meta data เหมือนเดิม) ... */}
           
-          <div className="movie-genres">
-             {/* ... (Genres เหมือนเดิม) ... */}
+          {/* แสดงข้อมูลหนัง */}
+          <div className="movie-meta" style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px', marginBottom: '15px', fontSize: '1rem' }}>
+            <span style={{ color: '#ffd700', fontWeight: 'bold' }}>⭐ {movie.rating ? Number(movie.rating).toFixed(1) : 'N/A'}</span>
+            <span>|</span>
+            <span>{movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : 'N/A'}</span>
+            <span>|</span>
+            <span>{movie.duration} นาที</span>
+            <span>|</span>
+            <span>ผู้กำกับ: <strong>{movie.director}</strong></span>
           </div>
+          
+          {movie.genres && movie.genres.length > 0 && (
+            <div className="movie-genres">
+              {movie.genres.map((genre) => (
+                <span key={genre.id} className="genre-tag">
+                  {genre.name}
+                </span>
+              ))}
+            </div>
+          )}
           
           <p className="movie-description">{movie.description}</p>
 

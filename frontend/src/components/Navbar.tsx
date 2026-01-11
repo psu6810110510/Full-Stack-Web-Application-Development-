@@ -80,7 +80,7 @@ export default function Navbar({ genres }: NavbarProps) {
           {/* Register Button - Show only when NOT logged in */}
           {!isAuthenticated && (
             <button className="auth-btn register-btn" onClick={() => navigate('/register')}
-              style={{ marginRight: '10px', backgroundColor: '#f5c518', color: '#000' }}>
+              style={{ backgroundColor: '#e50914', color: '#ffffff' }}>
               สมัครสมาชิก
             </button>
           )}

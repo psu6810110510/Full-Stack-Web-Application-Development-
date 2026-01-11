@@ -9,7 +9,7 @@ interface Movie {
   director: string;
   releaseDate: string;
   duration: number;
-  rating: string;
+  averageRating: number;
   genres: Array<{ id: number; name: string }>;
 }
 
@@ -32,7 +32,7 @@ export default function HeroSection({ movie }: HeroSectionProps) {
       <div className="hero-content">
         <h1 className="hero-title">{movie.title}</h1>
         <div className="hero-info">
-          <span className="hero-rating"> ⭐ {(Number(movie.rating) || 0).toFixed(1)}</span>
+          <span className="hero-rating"> ⭐ {(Number(movie.averageRating) || 0).toFixed(1)}</span>
           <span>{movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : ''}</span>
           <span>{movie.duration} นาที</span>
         </div>
