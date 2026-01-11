@@ -64,7 +64,6 @@ export default function LoginPage() {
           </button>
         </form>
         <p className="demo-info">
-          สำหรับทดสอบ: username: <strong>user1</strong>, password: <strong>password123</strong>
         </p>
       </div>
     </div>
