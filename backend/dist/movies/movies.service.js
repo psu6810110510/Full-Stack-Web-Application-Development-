@@ -32,13 +32,20 @@ let MoviesService = class MoviesService {
     constructor(moviesRepository) {
         this.moviesRepository = moviesRepository;
     }
-    findAll() {
-        return this.moviesRepository.find({
-            relations: ['genres'],
+    calculateAverageRating(reviews) {
+        if (!reviews || reviews.length === 0)
+            return 0;
+        const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
+        return sum / reviews.length;
+    }
+    async findAll() {
+        const movies = await this.moviesRepository.find({
+            relations: ['genres', 'reviews'],
             order: {
                 movie_id: 'ASC',
             },
         });
+        return movies.map(movie => (Object.assign(Object.assign({}, movie), { averageRating: this.calculateAverageRating(movie.reviews) })));
     }
     async findOne(id) {
         const movie = await this.moviesRepository.findOne({
@@ -48,24 +55,26 @@ let MoviesService = class MoviesService {
         if (!movie) {
             throw new common_1.NotFoundException(`Movie with ID ${id} not found`);
         }
-        return movie;
+        return Object.assign(Object.assign({}, movie), { averageRating: this.calculateAverageRating(movie.reviews) });
     }
     async getFeaturedMovie() {
         const movies = await this.moviesRepository.find({
-            relations: ['genres'],
-            order: { rating: 'DESC' },
-            take: 1,
+            relations: ['genres', 'reviews'],
         });
-        return movies[0];
+        const moviesWithRatings = movies.map(movie => (Object.assign(Object.assign({}, movie), { averageRating: this.calculateAverageRating(movie.reviews) })));
+        moviesWithRatings.sort((a, b) => b.averageRating - a.averageRating);
+        return moviesWithRatings[0] || null;
     }
     async findByGenre(genreId) {
-        return this.moviesRepository.find({
+        const movies = await this.moviesRepository.find({
             where: {
                 genres: { id: genreId }
             },
-            relations: ['genres'],
-            order: { rating: 'DESC' }
+            relations: ['genres', 'reviews'],
         });
+        const moviesWithRatings = movies.map(movie => (Object.assign(Object.assign({}, movie), { averageRating: this.calculateAverageRating(movie.reviews) })));
+        moviesWithRatings.sort((a, b) => b.averageRating - a.averageRating);
+        return moviesWithRatings;
     }
     create(data) {
         const { genreIds } = data, movieData = __rest(data, ["genreIds"]);

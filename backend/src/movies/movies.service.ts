@@ -11,46 +11,83 @@ export class MoviesService {
     private moviesRepository: Repository<Movie>,
   ) {}
 
-  findAll() {
-    return this.moviesRepository.find({
-      relations: ['genres'],
+  private calculateAverageRating(reviews: any[]): number {
+    if (!reviews || reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
+    return sum / reviews.length;
+  }
+
+  async findAll() {
+    const movies = await this.moviesRepository.find({
+      relations: ['genres', 'reviews'],
       order: {
         movie_id: 'ASC', 
       },
-    }); // 👈 ปิดวงเล็บจริงๆ ตรงนี้ทีเดียวจบ
+    });
+
+    // คำนวณคะแนนเฉลี่ยสำหรับแต่ละหนัง
+    return movies.map(movie => ({
+      ...movie,
+      averageRating: this.calculateAverageRating(movie.reviews),
+    }));
   }
 
   async findOne(id: number) {
     const movie = await this.moviesRepository.findOne({
-      where: { movie_id: id }, // ใช้ movie_id ตาม Entity ของคุณ
+      where: { movie_id: id },
       relations: ['reviews', 'reviews.user', 'genres'],
     });
 
     if (!movie) {
       throw new NotFoundException(`Movie with ID ${id} not found`);
     }
-    return movie;
+
+    // เพิ่มคะแนนเฉลี่ย
+    return {
+      ...movie,
+      averageRating: this.calculateAverageRating(movie.reviews),
+    };
   }
+
   async getFeaturedMovie() {
-    // ใช้ .find() แทน แล้วสั่ง take: 1 (ขอแค่ 1 เรื่อง)
+    // ดึงหนังทั้งหมดพร้อมรีวิว
     const movies = await this.moviesRepository.find({
-      relations: ['genres'],
-      order: { rating: 'DESC' },
-      take: 1, 
+      relations: ['genres', 'reviews'],
     });
     
-    // ส่งคืนตัวแรกที่เจอ (หรือ null ถ้าไม่มีหนังเลย)
-    return movies[0]; 
+    // คำนวณคะแนนเฉลี่ยและเรียงลำดับ
+    const moviesWithRatings = movies.map(movie => ({
+      ...movie,
+      averageRating: this.calculateAverageRating(movie.reviews),
+    }));
+
+    // เรียงตามคะแนนเฉลี่ยจากมากไปน้อย
+    moviesWithRatings.sort((a, b) => b.averageRating - a.averageRating);
+    
+    // ส่งคืนหนังที่มีคะแนนสูงสุด
+    return moviesWithRatings[0] || null;
   }
+
   async findByGenre(genreId: number) {
-    return this.moviesRepository.find({
+    const movies = await this.moviesRepository.find({
       where: { 
         genres: { id: genreId } 
-      } as any, // ใช้ casting เล็กน้อยเพื่อให้ TypeORM เข้าใจ relation query
-      relations: ['genres'],
-      order: { rating: 'DESC' }
+      } as any,
+      relations: ['genres', 'reviews'],
     });
+
+    // คำนวณคะแนนเฉลี่ยและเรียงลำดับ
+    const moviesWithRatings = movies.map(movie => ({
+      ...movie,
+      averageRating: this.calculateAverageRating(movie.reviews),
+    }));
+
+    // เรียงตามคะแนนเฉลี่ยจากมากไปน้อย
+    moviesWithRatings.sort((a, b) => b.averageRating - a.averageRating);
+
+    return moviesWithRatings;
   }
+
   create(data: CreateMovieDto) {
     // แยก genreIds ออกมา (เพราะ TypeORM ไม่รู้จัก field นี้ตรงๆ)
     const { genreIds, ...movieData } = data;
@@ -79,8 +116,6 @@ export class MoviesService {
   
     return this.moviesRepository.save(updatedMovie);
   }
-
-  // 🔴 ลบหนัง (Admin)
 
   async remove(id: number) {
     const movie = await this.findOne(id);
